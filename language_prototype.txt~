@@ -104,12 +104,6 @@ $marcus_mood = $marcus_mood - 1
 //Note that output will always capitalize parentheticals (should it?)
 //Note that text-substitution should work on any line of prose
 
-/* OUT:
- * Two options are given to the player:
- *      Shelley: What's gotten into you recently?
- *      Shelley stays silent.       
- * Currently '>'.
- */
 
 /*  Borrowing from inkle's ink format, a 'weave' style of writing
  *      is possible.
@@ -128,6 +122,11 @@ $marcus_mood = $marcus_mood - 1
  >  _s stays silent.
     !goto heart_to_heart
     //  The "goto" keyword jumps to either another scene or a subscene.
+/* OUT:
+ *      (Two options are given to the player: )
+ *      Shelley: What's gotten into you recently?
+ *      Shelley stays silent.       
+ */
 
 /* This '<' functions just like the ink format's 'gather' syntax; 
  *     i.e.,this line will print regardless of the choice chosen 
@@ -177,11 +176,14 @@ $marcus_mood = $marcus_mood - 1
     !def add20(x: Int): Int=
         return add10(x+10)
     ;;
+    /*  The plan is essentially to implement first-order functions, but
+     *      that might make implementing the interpreter difficult for
+     *      some languages.
+     */
 ;;
 
 !end
 ending command - signifies end of processed code
 Like with the start command, text after the !end will not be processed.
 
-(Oh god I'm looking at this feature set and wtf am I doing.
-This is insane.)
+(Oh god I'm looking at this feature set and wtf am I doing.)
