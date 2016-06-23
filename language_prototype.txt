@@ -1,0 +1,121 @@
+The following line is the 'start' command - only
+    statements following it will be processed as 
+    textscene content.
+
+Oh god I'm looking at this feature set and wtf am I doing.
+This is insane.
+
+!start
+!include (other file name)
+//just a dummy line to introduce up include statements
+
+//Single line comment
+
+/*
+ * Multi-line 
+ * comment
+ */
+
+/*
+ *  Note that '\' will be used as a general escape character.
+ */
+
+[Last Night]
+//Brackets indicate scene (vaguely equivalent to a function)
+    //Also think of them as a 'knot' from the ink format
+
+s <- Shelly:    A bright young woman.
+m <- Marcus     //Shelly's brother
+//Find and replace statements use assignment arrows, and are invoked 
+//  with the "_" operator (in writing mode)
+//":" can be used right after text replacement, and functions like '//'
+/* NOTE: this is pretty much syntactic sugar; equivalent to 
+ *      following statement:
+ * !val s = "Shelly"
+ * !val m = "Marcus"
+ */
+
+
+
+!var marcus_mood = -5 
+//notice the 'var' keyword indicates variable declaration 
+//variable declarations use '=' signs
+    //possibly consider 'val' keyword for immutable objects?
+
+puz <- puzzled
+
+It's late at night up on the top of the Argyle apartments. The moon is bright overhead.
+
+_s exits the stairwell and joins _m by the edge of the roof.
+//OUT: Shelly exits the stairwell and joins Marcus by the edge of the roof.
+
+@_s How'd the interview go?
+@_m: Fine.
+/* OUT:
+ * Shelley:    How'd the interview go?
+ * Marcus:     Fine.
+ */
+//Note that ':' is optional here.
+//Note that '_' is actually an operator akin to Python's 'str()'
+
+_m stubs out his cigarette on the concrete next to him.
+
+@_s (_puz) Is anything wrong?
+
+$marcus_mood = $marcus_mood - 1
+
+@_m (Irritably): Everything's fine.#.5
+/* OUT:
+ * Shelley (Puzzled):  Is anything wrong?
+ * Marcus (Irritably): Everything's fine. (prints in 1/2 of time) 
+ */
+//Note that output will always capitalize parentheticals (should it?)
+//Note that text-substitution should work on any line of prose
+
+/* OUT:
+ * Two options are given to the player:
+ *      Shelley: What's gotten into you recently?
+ *      Shelley stays silent.       
+ * //'|' is the choice signifier
+ * Currently '>'.
+ */
+ >  @_s What's gotten into you recently?
+    $marcus_mood = $marcus_mood - 1
+    @_m I've just got a lot on my mind, all right?
+ >  _s stays silent.
+    !goto heart_to_heart
+    //basically a divert from ink. lol
+
+/* This '<' functions just like the ink format's 'gather' syntax; 
+ *     i.e.,this line will print regardless of the choice chosen 
+ *     (unless the textscene ends before then)
+ */
+ <  @_m Well, I'm turning in for the night. ++
+    //"++" concatenates next line with current line
+    {$marcus_mood > 3: Thanks for listening | Sorry.}
+    //{} = 'if' syntax; shameless ripping off ink here
+
+    [[heart_to_heart]]
+    //double brackets indicate sub-scene (in terms of scope)
+    @_s (): You can always talk to me about anything, you know.
+    @_m (): (heartfelt outpouring)
+    $marcus_mood = $marcus_mood + 3
+    @_m ...
+    @_m Got all that?
+    @_s Yes. Yes I did.
+    ;;
+
+    !def add10(x: Int): Int = 
+        return x+10
+    ;;
+    !def add20(x: Int): Int=
+        return add10(x+10)
+    ;;
+    //rip off Scala syntax here???
+;;
+//Scene/segment end syntax
+
+!end
+ending command - signifies end of processed code
+Like with the start command, text after the !end will not be processed.
+
