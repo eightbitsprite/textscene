@@ -1,0 +1,187 @@
+The following line is the 'start' command - only
+    statements following it will be processed as 
+    textscene content.
+    (this feature honestly seems redundant w/ comments, but
+    is in place to prevent compiler from accidentally 
+    processing standard files because syntax is so loose)
+
+!start
+
+//Single line comment
+
+/*
+ * Multi-line 
+ * comment
+ */
+
+!include (other file name)
+// Used to include files that may have needed functions/vars
+
+/*
+ *  Note that '\' will be used as a general escape character.
+ *      Necessary to print '_' in prose lines.
+ */
+
+[Last Night]
+/*  Single brackets indicate a scene, which has scope - all
+ *      variables, scenes, and functions in a scene are not
+ *      defined outside of it.
+ */
+
+It's late at night up on the top of the Argyle apartments. The moon is bright overhead.
+//Non-dialogue prose lines lack any markup whatsover.
+
+m <- Marcus     //Shelly's brother
+/*  Find and replace statements are declared with assignment arrows, 
+ *      and are invoked with '_'
+ */
+_m is smoking a cigarette by the edge of the roof, looking out over the city.
+
+s <- Shelly:    A bright young woman.
+//":" can be used right after text replacement, and functions like '//'
+
+/*  At the end of any prose line, appending a '#' operator and an integer
+ *      will cause the following line to print faster or slower. Note that
+ *      the default value of this value is '1'.
+ */
+_s exits the stairwell and joins _m by the edge of the roof.#2
+/*  OUT: 
+ *      (after a long pause)
+ *      Shelly exits the stairwell and joins Marcus by the edge of the roof.
+ */
+
+/*  Any command sufficiently distanced from the act of writing itself is
+ *      generally denoted by a '!' at the beginning of the line.
+ *      (Yes, the distinction is fairly arbitrary)
+ */
+!var marcus_mood = -5 
+//  Keyword to declare a mutable variable is 'var'. 
+!val shelly_mood = 10
+//  Keyword to declare an immutable (or constant) variable is 'val'. 
+
+irr <- irritably
+/* NOTE: find and replace statements are pretty much syntactic sugar; 
+ *          Previous line is essentially:
+ *  !val irr = "irritably"
+ *      Note: the '_' operator is essentially Python's 'str()' function.
+ */
+
+/*  The '@' operator indicates that the following prose line is actually
+ *      a line of dialogue spoken by one of the characters. This has special
+ *      formatting (or should) and can have additional information.
+ */
+@Shelly How'd the interview go?
+@Marcus : Fine.
+/*  OUT:
+ *      Shelly:    How'd the interview go?
+ *      Marcus:     Fine.
+ */
+//Note that the ':' symbol is generally optional. For a case where it is not,
+//  scroll down to "[[heart_to_heart]]"
+
+_m stubs out his cigarette on the concrete next to him.
+
+/*  An optional parenthetical indicating an emotion or action can be defined
+ *      after the '@' statement (in parentheses, of course)
+ */
+@Shelly (Puzzled) Is anything wrong?
+/*  OUT:
+ *      Shelley (Puzzled):  Is anything wrong?
+ */
+
+/*  Once declared, variables are accessed and modified through the '$'
+ *  operator.
+ */
+$marcus_mood = $marcus_mood - 1
+
+/*  Find-and-replacements still work in dialogue statements, even when
+ *      defining the speaker or inserting a parenthetical.
+@_m (_irr): Everything's fine.#.9
+/*  OUT:
+ *      (this line prints slightly faster than normal)
+ *      Marcus (Irritably): Everything's fine. 
+ */
+//Note that output will always capitalize parentheticals (should it?)
+//Note that text-substitution should work on any line of prose
+
+/* OUT:
+ * Two options are given to the player:
+ *      Shelley: What's gotten into you recently?
+ *      Shelley stays silent.       
+ * Currently '>'.
+ */
+
+/*  Borrowing from inkle's ink format, a 'weave' style of writing
+ *      is possible.
+ *  Essentially, choices can be given to determine what lines will
+ *      be shown next.
+ *
+ *  A line of dialogue or prose can be marked as a choice with '>'.
+ */
+ >  @_s What's gotten into you recently?
+    $marcus_mood = $marcus_mood - 1
+    @_m I've just got a lot on my mind, all right?
+ /* To bind lines to a specific choice, simply insert them after the
+  *     initial choice declaration and before either another choice
+  *     declaration or a gather statement.
+  */
+ >  _s stays silent.
+    !goto heart_to_heart
+    //  The "goto" keyword jumps to either another scene or a subscene.
+
+/* This '<' functions just like the ink format's 'gather' syntax; 
+ *     i.e.,this line will print regardless of the choice chosen 
+ *     (unless the textscene ends before then)
+ */
+ <  @_m Well, I'm turning in for the night. ++
+    //Note: "++" operator indicates line continuation.
+    /*  Variables can be checked to determine output through 'if'
+     *      statement syntax identical to that found in 'ink' format:
+     *      { [cond] : [if cond is true, do this] | [otherwise do this] }
+     */
+    {$marcus_mood > 3: Thanks for listening | Sorry.}
+    //end of scene. But the formal syntax for indicating the end of
+    //  a scene is ";;", and can be found at the bottom of the page.
+
+    /*  Sub-scenes are declared through double brackets. They function
+     *      identically to scenes (and have their own scope as well).
+     *
+     *  Sub-scenes cannot be nested inside another sub-scene.
+    [[heart_to_heart]]
+    @_s You can always talk to me about anything, you know.
+    @_m : (heartfelt outpouring)
+    //Here is where the ':' operator becomes necessary - if parentheses are
+    //used in the dialogue itself. This probably won't be necessary for 
+    //anything outside of outlining, though.
+
+    $marcus_mood = $marcus_mood + 3
+    @_m ...
+    @_m Got all that?
+    @_s Yes. Yes I did.
+
+    /*  To indicate the end of a scene or a subscene, use the ";;" operator.
+     */
+    ;;
+
+    /*  The 'def' keyword can be used to declare functions. Function syntax
+     *      is patterned after Scala syntax, like so:
+     *      !def [function name]([parameter]: [param type]): [return type] =
+     *          [function body]
+     *      ;;
+     *
+     *  Note that the end of a function is also denoted by the ";;" operator.
+     */
+    !def add10(x: Int): Int = 
+        return x+10
+    ;;
+    !def add20(x: Int): Int=
+        return add10(x+10)
+    ;;
+;;
+
+!end
+ending command - signifies end of processed code
+Like with the start command, text after the !end will not be processed.
+
+(Oh god I'm looking at this feature set and wtf am I doing.
+This is insane.)
